@@ -4,9 +4,14 @@
 # All rights reserved.
 # No warranty, explicit or implied, provided.
 
-from labs.common import userinterface
+from labs import labconfig
 from labs.grading import Default
+from labs.common import steps, labtools, userinterface
 
+SKU = labconfig.get_course_sku().upper()
+
+_targets = ["servera"]
+_servera = "servera"
 
 class Breakfix009Dracutlvm(Default):
     __LAB__ = "breakfix009-dracutLVM"
