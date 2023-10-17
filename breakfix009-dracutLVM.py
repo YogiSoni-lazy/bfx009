@@ -44,6 +44,30 @@ class Breakfix009Dracutlvm(Default):
         ]
         userinterface.Console(items).run_items(action="Starting")
 
+    def undo(self):
+        items = [
+            {
+                "label": "Checking lab systems",
+                "task": labtools.check_host_reachable,
+                "hosts": _targets,
+                "fatal": True,
+            },
+            steps.run_command(
+                label="Configuring " + _servera,
+                hosts=[_servera],
+                command='''
+                umount /mnt/data;
+                rm -rf /mnt/data;
+                lvremove /dev/vg01/lv01;
+                vgremove vg01;
+                pvremove /dev/vdb1;
+                sed -i "$d" /etc/fstab
+                ''',
+                shell=True,
+            ),
+        ]
+        userinterface.Console(items).run_items(action="Un-done")
+        
     def grade(self):
         items = []
         ui = userinterface.Console(items)
