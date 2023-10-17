@@ -24,6 +24,23 @@ class Breakfix009Dracutlvm(Default):
                 "hosts": _targets,
                 "fatal": True,
             },
+            steps.run_command(
+                label="Configuring " + _servera,
+                hosts=[_servera],
+                command='''
+                pvcreate /dev/vdb;
+                vgcreate vg01 /dev/vdb;
+                lvcreate -L 800M -n lv01 vg01;
+                mkfs.xfs /dev/vg01/lv01;
+                mkdir /mnt/data;
+                mount /dev/vg01/lv01 /mnt/data;
+                echo '/dev/vg01/lv01 /mnt/data  xfs  defaults 0 0' | sudo  tee -a /etc/fstab;
+                sed  -i '130i      filter=["r|.*/|"]' /etc/lvm/lvm.conf;
+                dracut -f  &>> /dev/null;
+                touch /var/tmp/.kc1;
+                ''',
+                shell=True,
+            ),
         ]
         userinterface.Console(items).run_items(action="Starting")
 
