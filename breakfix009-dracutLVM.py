@@ -24,6 +24,7 @@ class Breakfix009Dracutlvm(Default):
                 "hosts": _targets,
                 "fatal": True,
             },
+        ]
         userinterface.Console(items).run_items(action="Starting")
 
     def grade(self):
