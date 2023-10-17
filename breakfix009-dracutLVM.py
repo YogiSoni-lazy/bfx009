@@ -58,6 +58,7 @@ class Breakfix009Dracutlvm(Default):
                 command='''
                 umount /mnt/data;
                 rm -rf /mnt/data;
+                egrep -v -e 'filter=\["r\|.*/|"\]' /etc/lvm/lvm.conf > /tmp/lvm.conf && mv -f /tmp/lvm.conf /etc/lvm/lvm.conf;
                 lvremove /dev/vg01/lv01;
                 vgremove vg01;
                 pvremove /dev/vdb1;
