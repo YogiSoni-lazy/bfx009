@@ -44,7 +44,7 @@ class Breakfix009Dracutlvm(Default):
         ]
         userinterface.Console(items).run_items(action="Starting")
 
-    def undo(self):
+    def fix(self):
         items = [
             {
                 "label": "Checking lab systems",
