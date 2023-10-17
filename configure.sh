@@ -6,3 +6,5 @@ lab select bfx009
 lab --version
 source ~/.venv/labs/bin/activate
 cd .venv/labs/lib/python3.6/site-packages/bfx009/
+#git pull https://github.com/YogiSoni-lazy/bfx009.git
+#git clone https://YogiSoni-lazy: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@github.com/YogiSoni-lazy/bfx009.git
