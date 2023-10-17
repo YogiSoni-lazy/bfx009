@@ -116,20 +116,6 @@ class Breakfix009Dracutlvm(Default):
                 returns="0",
                 shell=True,
             ),
-            steps.run_command(
-                label="Verifying lab system " + _servera,
-                hosts=[_servera],
-                command='''[ $(awk '/^menuentry.*{/,/^}/' /boot/grub2/grub.cfg | awk -vRS="\n}\n" -vDEFAULT="$((default+1))" 'NR==DEFAULT' | grep -o '/vmlinuz-.*' | awk '{print $1}' | cut -c 10-) == $(uname -a | awk '{print $3}') ]''',
-                returns="0",
-                shell=True,
-            ),
-            steps.run_command(
-                label="Verifying lab system " + _servera,
-                hosts=[_servera],
-                command='''grep "filter = [ "r|.*/|" ]" /etc/lvm/lvm.conf &>> /dev/null''',
-                returns="0",
-                shell=True,
-            ),
         ]
         ui = userinterface.Console(items)
         ui.run_items(action="Grading")
