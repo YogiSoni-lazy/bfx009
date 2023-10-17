@@ -17,7 +17,13 @@ class Breakfix009Dracutlvm(Default):
     __LAB__ = "breakfix009-dracutLVM"
 
     def start(self):
-        items = []
+        items = [
+            {
+                "label": "Checking lab systems",
+                "task": labtools.check_host_reachable,
+                "hosts": _targets,
+                "fatal": True,
+            },
         userinterface.Console(items).run_items(action="Starting")
 
     def grade(self):
