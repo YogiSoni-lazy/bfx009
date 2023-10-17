@@ -59,6 +59,7 @@ class Breakfix009Dracutlvm(Default):
                 umount /mnt/data;
                 rm -rf /mnt/data;
                 egrep -v -e 'filter=\["r\|.*/|"\]' /etc/lvm/lvm.conf > /tmp/lvm.conf && mv -f /tmp/lvm.conf /etc/lvm/lvm.conf;
+                dracut -fv /boot/initramfs-3.10.0-957.el7.x86_64.img 3.10.0-957.el7.x86_64;
                 lvremove -f /dev/vg01/lv01;
                 vgremove vg01;
                 pvremove /dev/vdb;
