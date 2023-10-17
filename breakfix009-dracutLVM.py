@@ -34,7 +34,7 @@ class Breakfix009Dracutlvm(Default):
                 mkfs.xfs /dev/vg01/lv01;
                 mkdir /mnt/data;
                 mount /dev/vg01/lv01 /mnt/data;
-                echo '/dev/vg01/lv01 /mnt/data  xfs  defaults 0 0' | sudo  tee -a /etc/fstab;
+                echo '/dev/vg01/lv01 /mnt/data xfs defaults 0 0' | sudo  tee -a /etc/fstab;
                 sed  -i '130i      filter=["r|.*/|"]' /etc/lvm/lvm.conf;
                 dracut -f  &>> /dev/null;
                 touch /var/tmp/.kc1;
@@ -44,32 +44,6 @@ class Breakfix009Dracutlvm(Default):
         ]
         userinterface.Console(items).run_items(action="Starting")
 
-    def fix(self):
-        items = [
-            {
-                "label": "Checking lab systems",
-                "task": labtools.check_host_reachable,
-                "hosts": _targets,
-                "fatal": True,
-            },
-            steps.run_command(
-                label="Configuring " + _servera,
-                hosts=[_servera],
-                command='''
-                umount /mnt/data;
-                rm -rf /mnt/data;
-                egrep -v -e 'filter=\["r\|.*/|"\]' /etc/lvm/lvm.conf > /tmp/lvm.conf && mv -f /tmp/lvm.conf /etc/lvm/lvm.conf;
-                dracut -fv /boot/initramfs-3.10.0-957.el7.x86_64.img 3.10.0-957.el7.x86_64;
-                lvremove -f /dev/vg01/lv01;
-                vgremove vg01;
-                pvremove /dev/vdb;
-                sed -i "$d" /etc/fstab;
-                ''',
-                shell=True,
-            ),
-        ]
-        userinterface.Console(items).run_items(action="Un-done")
-        
     def grade(self):
         """
         Perform evaluation steps on the system
@@ -122,5 +96,27 @@ class Breakfix009Dracutlvm(Default):
         ui.report_grade()
 
     def finish(self):
-        items = []
+        items = [
+            {
+                "label": "Checking lab systems",
+                "task": labtools.check_host_reachable,
+                "hosts": _targets,
+                "fatal": True,
+            },
+            steps.run_command(
+                label="Removing the settings from " + _servera,
+                hosts=[_servera],
+                command='''
+                umount /mnt/data;
+                rm -rf /mnt/data;
+                egrep -v -e 'filter=\["r\|.*/|"\]' /etc/lvm/lvm.conf > /tmp/lvm.conf && mv -f /tmp/lvm.conf /etc/lvm/lvm.conf;
+                dracut -fv /boot/initramfs-4.18.0-305.el8.x86_64.img 4.18.0-305.el8.x86_64;
+                lvremove -f /dev/vg01/lv01;
+                vgremove vg01;
+                pvremove /dev/vdb;
+                egrep -v -e '/dev/vg01/lv01 /mnt/data xfs defaults 0 0' /etc/fstab > /tmp/fstab && mv -f /tmp/fstab /etc/fstab;
+                ''',
+                shell=True,
+            ),
+        ]
         userinterface.Console(items).run_items(action="Finishing")
