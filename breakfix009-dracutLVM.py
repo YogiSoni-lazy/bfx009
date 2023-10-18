@@ -37,7 +37,7 @@ class Breakfix009Dracutlvm(Default):
                 echo '/dev/vg01/lv01 /mnt/data xfs defaults 0 0' | sudo  tee -a /etc/fstab;
                 sed  -i '130i      filter=["r|.*/|"]' /etc/lvm/lvm.conf;
                 dracut -f  &>> /dev/null;
-                touch /var/tmp/.kc1;
+                reboot;
                 ''',
                 shell=True,
             ),
